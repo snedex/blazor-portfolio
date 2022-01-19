@@ -62,7 +62,8 @@
 }
 
 .bg-motherboard-dev {
-    background-image: url("../assets/img/publicbackgrounds/bg-motherboard-dev.jpg");
+  /*  background-image: url("../assets/img/fotis-fotopoulos-unsplash.jpg");*/
+    background-image: url("../assets/img/roman-synkevych-unsplash.jpg");
 }
 
 .bg-white-94 {
@@ -122,7 +123,8 @@ body {
     }
 
     .bg-motherboard-dev {
-        background-image: url("../assets/img/publicbackgrounds/bg-motherboard.jpg");
+        /*background-image: url("../assets/img/fotis-fotopoulos-unsplash.jpg");*/
+        background-image: url("../assets/img/roman-synkevych-unsplash.jpg");
     }
 
     .md-and-smaller-d-none {
