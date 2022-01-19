@@ -2,40 +2,44 @@
 using Core.Models;
 using System.Net.Http.Json;
 
-internal sealed class InMemoryDatabaseCache
+namespace BlazorUI.Services
 {
-    private HttpClient _httpClient;
-
-    public InMemoryDatabaseCache(HttpClient httpClient)
+    internal sealed class InMemoryDatabaseCache
     {
-        _httpClient = httpClient;
-    }
+        private HttpClient _httpClient;
 
-    private IList<Category> _categories = null;
-    internal IList<Category> Categories
-    {
-        get { return _categories; }
-        set { 
-            _categories = value;
-            NotifyCategoriesDataChanged();
-        }
-    }
-
-    private bool _fetchingRecords = false;
-
-    internal async Task GetCategoriesAndCache()
-    {
-        if (!_fetchingRecords)
+        public InMemoryDatabaseCache(HttpClient httpClient)
         {
-            _fetchingRecords = true;
-            _categories = await _httpClient.GetFromJsonAsync<List<Category>>(APIEndpoints.s_categories);
-            _fetchingRecords = false;
+            _httpClient = httpClient;
         }
+
+        private IList<Category> _categories = null;
+        internal IList<Category> Categories
+        {
+            get { return _categories; }
+            set
+            {
+                _categories = value;
+                NotifyCategoriesDataChanged();
+            }
+        }
+
+        private bool _fetchingRecords = false;
+
+        internal async Task GetCategoriesAndCache()
+        {
+            if (!_fetchingRecords)
+            {
+                _fetchingRecords = true;
+                _categories = await _httpClient.GetFromJsonAsync<List<Category>>(APIEndpoints.s_categories);
+                _fetchingRecords = false;
+            }
+        }
+
+        //event to subscribe to, to listen for data change
+        internal event Action OnCategoriesDataChanged;
+
+        //Fires the event if there are subscribers 
+        private void NotifyCategoriesDataChanged() => OnCategoriesDataChanged?.Invoke();
     }
-
-    //event to subscribe to, to listen for data change
-    internal event Action OnCategoriesDataChanged;
-
-    //Fires the event if there are subscribers 
-    private void NotifyCategoriesDataChanged() => OnCategoriesDataChanged?.Invoke();
 }
