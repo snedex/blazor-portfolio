@@ -1,0 +1,37 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.31903.59
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ServerAPI", "ServerAPI\ServerAPI.csproj", "{783F31A3-C9EE-4DED-A487-5F40FB0E2E2B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BlazorUI", "BlazorUI\BlazorUI.csproj", "{74BDB49F-0578-40EA-B569-B68E3BAF19BA}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Core", "Core\Core.csproj", "{EBAABBF3-7781-420E-912F-788582C3D73C}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{783F31A3-C9EE-4DED-A487-5F40FB0E2E2B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{783F31A3-C9EE-4DED-A487-5F40FB0E2E2B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{783F31A3-C9EE-4DED-A487-5F40FB0E2E2B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{783F31A3-C9EE-4DED-A487-5F40FB0E2E2B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{74BDB49F-0578-40EA-B569-B68E3BAF19BA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{74BDB49F-0578-40EA-B569-B68E3BAF19BA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{74BDB49F-0578-40EA-B569-B68E3BAF19BA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{74BDB49F-0578-40EA-B569-B68E3BAF19BA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EBAABBF3-7781-420E-912F-788582C3D73C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EBAABBF3-7781-420E-912F-788582C3D73C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EBAABBF3-7781-420E-912F-788582C3D73C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EBAABBF3-7781-420E-912F-788582C3D73C}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {18651B4E-631D-4046-973A-BC501C681547}
+	EndGlobalSection
+EndGlobal
