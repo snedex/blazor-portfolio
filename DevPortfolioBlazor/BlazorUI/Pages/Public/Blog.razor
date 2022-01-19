@@ -9,18 +9,15 @@
             <p>Click a category card to view its blog posts.</p>
 
             <div class="row">
-                <div class="col-md-4">
-                    <BlazorUI.Components.Public.Blog.CategoryCard />
-                </div>
-
-                <div class="col-md-4">
-                     <BlazorUI.Components.Public.Blog.CategoryCard />
-                </div>
-
-                <div class="col-md-4">
-                     <BlazorUI.Components.Public.Blog.CategoryCard />
-                </div>
-
+                @if (DBCache.Categories != null)
+                {
+                    foreach (var category in DBCache.Categories)
+                    {
+                        <div class="col-md-4">
+                            <BlazorUI.Components.Public.Blog.CategoryCard />
+                        </div>
+                    }
+                }
             </div>
         </div>
     </div>
@@ -29,3 +26,27 @@
 
 
 <BlazorUI.Components.Public.Shared.Footer />
+
+@implements IDisposable
+@code {
+
+    [Inject] InMemoryDatabaseCache DBCache { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        //This event subscription causes Blazor to rerender the component as the state has changed
+        DBCache.OnCategoriesDataChanged += StateHasChanged;
+
+        if(DBCache.Categories == null)
+        {
+            await DBCache.GetCategoriesAndCache();
+        }
+    }
+
+    public void Dispose()
+    {
+        //Prevents memory leaks
+         DBCache.OnCategoriesDataChanged -= StateHasChanged;
+    }
+
+}
