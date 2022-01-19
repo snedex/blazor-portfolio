@@ -396,3 +396,8 @@ FodyWeavers.xsd
 
 # JetBrains Rider
 *.sln.iml
+obj
+/DevPortfolioBlazor/BlazorUI/obj
+obj
+/DevPortfolioBlazor/Core/obj
+/DevPortfolioBlazor/ServerAPI/obj
