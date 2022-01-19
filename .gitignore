@@ -402,3 +402,7 @@ obj
 /DevPortfolioBlazor/Core/obj
 /DevPortfolioBlazor/ServerAPI/obj
 /DevPortfolioBlazor/.vs
+
+#SQLite lock and temp files
+*.db-shm
+*.db-wal
