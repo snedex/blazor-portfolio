@@ -15,7 +15,7 @@ namespace ServerAPI.Controllers
             _appDbContext = dbContext;
         }
 
-        [HttpGet]
+        [HttpGet] 
         public async Task<IActionResult> Get()
         {
             var categories = await _appDbContext.Categories.ToListAsync();
