@@ -1,5 +1,37 @@
 ﻿<h3>NavBar</h3>
 
 @code {
+    //Inject the NavigationManager same as @inject
+    [Inject] public NavigationManager NavManager { get; set; }
 
+    private const string HomePageUri = "/";
+    private const string BlogPageUri = "/blog";
+
+    private bool IsPageActive(string uriToCheck)
+    {
+        //skip the first parts of the URI http:// ..etc.
+        string[] uriSplit = NavManager.Uri.Split("/", StringSplitOptions.None).Skip(3).ToArray();
+
+        if (uriToCheck == HomePageUri)
+        {
+            if (uriSplit.Last().Length == 0)
+                return true;
+        }
+        else
+        {
+            //This is for checking nested pages, e.g the blog, iterate through the parts of the uri to find a match
+            //TODO: Regex with lookup values?
+            var pageParts = uriToCheck.Split("/").Skip(1).ToArray();
+
+            foreach (var currentUriPart in uriSplit)
+            {
+                foreach (var pagePart in pageParts)
+                {
+                    if (pagePart == currentUriPart)
+                        return true;
+                }
+            }
+        }
+        return false;
+    }
 }
