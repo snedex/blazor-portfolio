@@ -7,10 +7,15 @@ on:
   push:
     branches:
       - main
+  pull_request:
+    types: [opened, synchronize, reopened, closed]
+    branches:
+      - main
   workflow_dispatch:
 
 jobs:
   build:
+    if: github.event_name == 'push' || (github.event_name == 'pull_request' && github.event.action != 'closed')
     runs-on: windows-latest
 
     steps:
@@ -22,11 +27,11 @@ jobs:
           dotnet-version: '6.0.x'
           include-prerelease: false
 
-      - name: Build with dotnet
-        run: dotnet build "./DevPortfolioBlazor/ServerAPI/ServerAPI.csproj" --configuration Release
-
-      - name: dotnet publish
-        run: dotnet publish "./DevPortfolioBlazor/ServerAPI/ServerAPI.csproj" -c Release -o ${{env.DOTNET_ROOT}}/myapp
+      - name: Build and publish
+        run: |
+          cd DevPortfolioBlazor/ServerAPI
+          dotnet build -c Release
+          dotnet publish -c Release -o ${{env.DOTNET_ROOT}}\myapp
 
       - name: Upload artifact for deployment job
         uses: actions/upload-artifact@v2
@@ -35,6 +40,7 @@ jobs:
           path: ${{env.DOTNET_ROOT}}/myapp
 
   deploy:
+    if: github.event_name == 'push' || (github.event_name == 'pull_request' && github.event.action != 'closed')
     runs-on: windows-latest
     needs: build
     environment:
