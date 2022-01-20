@@ -2,6 +2,8 @@
 {
     internal static class APIEndpoints
     {
+
+        //TODO: magic strings
 #if DEBUG
         internal const string ServerBaseUrl = "https://localhost:5003";
 #else
