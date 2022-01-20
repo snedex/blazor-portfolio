@@ -1,0 +1,22 @@
+﻿@using Core.Models
+
+<div class="my-1">
+    <div class="card shadow-no-hover">
+        <img src="@Skill.ImagePath" class="card-img-top" alt="@Skill.Title thumbnail image" style="height: 200px;" />
+
+        <div class="card-body">
+            <h3 class="card-title fw-bold">@Skill.Title</h3>
+            <p class="card-text">
+                @Skill.Description
+            </p>
+        </div>
+    </div>
+</div>
+
+
+@code {
+
+    //Passed in "model"
+    [Parameter] public Skill Skill { get; set; }
+
+}

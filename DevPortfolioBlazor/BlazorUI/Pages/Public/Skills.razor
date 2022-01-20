@@ -1,0 +1,58 @@
+﻿@page "/skills"
+
+@implements IDisposable
+@code {
+
+    [Inject] InMemoryDatabaseCache DBCache { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        //This event subscription causes Blazor to rerender the component as the state has changed
+        DBCache.OnSkillsDataChanged += StateHasChanged;
+
+        //TODO: how do we know if this is updated?
+        if (DBCache.Skills == null)
+        {
+            await DBCache.GetSkillsAndCache();
+        }
+    }
+
+    public void Dispose()
+    {
+        //Prevents memory leaks
+        DBCache.OnSkillsDataChanged -= StateHasChanged;
+    }
+
+}
+<BlazorUI.Components.Public.Shared.NavBar />
+
+<main class="bg-motherboard-dev">
+    <div class="container min-vh-95 py-5 bg-white-94">
+        <div class="row">
+            <div class="col">
+                <h1>Skills</h1>
+                <p>As a developer I have are a very particular set of skills. Skills I have acquired over a very long [15 year] career.</p>
+                <p>Skills that make me a nightmare for bugs like you. If you let my code build now that'll be the end of it. I will not look for you, I will not pursue you.</p>
+                <p>But if you don't, I will look for you, I will find you, and I will squash you [bugs].</p>
+            </div>
+        </div>
+        <div class="row">
+            @if (DBCache.Skills != null)
+            {
+                foreach (var skill in DBCache.Skills)
+                {
+                    <div class="col-md-4">
+                        <BlazorUI.Components.Public.Skills.SkillCard Skill="skill" />
+                    </div>
+                }
+            }
+            else
+            {
+                <h3>Hmm.. there doesn't appear to be anything here.</h3>
+                <p><small>Might want to check that API...</small></p>
+            }
+        </div>
+    </div>
+</main>
+
+<BlazorUI.Components.Public.Shared.Footer />
