@@ -26,9 +26,13 @@ var app = builder.Build();
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
-    app.UseSwagger();
-    app.UseSwaggerUI();
+    
 }
+
+app.UseSwagger();
+app.UseSwaggerUI(options => { 
+    options.RoutePrefix = String.Empty; 
+});
 
 app.UseHttpsRedirection();
 app.UseStaticFiles();
