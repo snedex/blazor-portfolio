@@ -30,7 +30,8 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseSwagger();
-app.UseSwaggerUI(options => { 
+app.UseSwaggerUI(options => {
+    options.SwaggerEndpoint("/swagger/v1/swagger.json", "Blazor Portfolio API");
     options.RoutePrefix = String.Empty; 
 });
 
