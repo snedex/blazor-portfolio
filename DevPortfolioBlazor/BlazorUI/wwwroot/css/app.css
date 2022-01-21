@@ -64,6 +64,8 @@
 .bg-motherboard-dev {
   /*  background-image: url("../assets/img/fotis-fotopoulos-unsplash.jpg");*/
     background-image: url("../assets/img/roman-synkevych-unsplash.jpg");
+    background-repeat: no-repeat;
+    background-color: black;
 }
 
 .bg-white-94 {
@@ -125,6 +127,8 @@ body {
     .bg-motherboard-dev {
         /*background-image: url("../assets/img/fotis-fotopoulos-unsplash.jpg");*/
         background-image: url("../assets/img/roman-synkevych-unsplash.jpg");
+        background-repeat: no-repeat;
+        background-color: black;
     }
 
     .md-and-smaller-d-none {

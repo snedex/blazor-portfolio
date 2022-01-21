@@ -22,7 +22,7 @@ namespace Core.Models
         [IgnoreDataMember]
         public virtual Project Project { get; set; }
 
-        public virtual ICollection<ProjectImage> Images { get; set; }
+        public virtual List<ProjectImage> Images { get; set; }
 
         public string Content { get; set; }
 

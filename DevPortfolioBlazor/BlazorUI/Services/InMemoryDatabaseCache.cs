@@ -14,6 +14,10 @@ namespace BlazorUI.Services
         }
 
         private IList<Category> _categories = null;
+        private IList<Skill> _skills = null;
+        private IList<ProjectDetail> _projectDetails = null;
+        private IList<Project> _projects = null;
+
         internal IList<Category> Categories
         {
             get { return _categories; }
@@ -23,8 +27,7 @@ namespace BlazorUI.Services
                 NotifyCategoriesDataChanged();
             }
         }
-
-        private IList<Skill> _skills = null;
+ 
         internal IList<Skill> Skills
         {
             get { return _skills; }
@@ -32,6 +35,26 @@ namespace BlazorUI.Services
             {
                 _skills = value;
                 NotifySkillsDataChanged();
+            }
+        }
+
+        internal IList<Project> Projects
+        {
+            get { return _projects; }
+            set
+            {
+                _projects = value;
+                NotifyProjectsDataChanged();
+            }
+        }
+
+        internal IList<ProjectDetail> ProjectDetails
+        {
+            get { return _projectDetails; }
+            set
+            {
+                _projectDetails = value;
+                NotifyProjectDetailsChanged();
             }
         }
 
@@ -57,13 +80,37 @@ namespace BlazorUI.Services
             }
         }
 
+        internal async Task GetProjectsAndCache()
+        {
+            if (!_fetchingRecords)
+            {
+                _fetchingRecords = true;
+                _projects = await _httpClient.GetFromJsonAsync<List<Project>>(APIEndpoints.s_projects);
+                _fetchingRecords = false;
+            }
+        }
+
+        internal async Task GetProjectDetailsAndCache()
+        {
+            if (!_fetchingRecords)
+            {
+                _fetchingRecords = true;
+                _projectDetails = await _httpClient.GetFromJsonAsync<List<ProjectDetail>>(APIEndpoints.s_projectDetails);
+                _fetchingRecords = false;
+            }
+        }
+
         //event to subscribe to, to listen for data change
         internal event Action OnCategoriesDataChanged;
         internal event Action OnSkillsDataChanged;
+        internal event Action OnProjectsDataChanged;
+        internal event Action OnProjectDetailsChanged;
 
         //Fires the event if there are subscribers 
         private void NotifyCategoriesDataChanged() => OnCategoriesDataChanged?.Invoke();
         private void NotifySkillsDataChanged() => OnSkillsDataChanged?.Invoke();
+        private void NotifyProjectsDataChanged() => OnProjectsDataChanged?.Invoke();
+        private void NotifyProjectDetailsChanged() => OnProjectDetailsChanged?.Invoke();
 
     }
 }

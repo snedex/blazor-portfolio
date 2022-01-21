@@ -1,0 +1,35 @@
+﻿@using Core.Models
+
+@code {
+    private bool _modalWindowOpen = false;
+
+    //Passed in "model"
+    [Parameter] public Project Project { get; set; }
+
+    private void ShowModal()
+    {
+        _modalWindowOpen = true;
+    }
+}
+
+@if(_modalWindowOpen)
+{
+    <BlazorUI.Components.Public.Portfolio.ProjectModalWindow Project="Project" ParentOnClickClose="() => _modalWindowOpen = false" />
+}
+
+<div class="my-2">
+    <div class="card shadow">
+        <img src="@Project.ImagePath" alt="@Project.Name project thumbnail image" />
+
+        <div class="card-body">
+            <h3 class="card-title fw-bold">@Project.Name</h3>
+            <p class="card-text">
+               @Project.Excerpt...
+            </p>
+        </div>
+
+        <button @onclick="ShowModal" class="btn btn-primary stretched-link">
+            <i class="fas fa-info-circle"></i> More information
+        </button>
+    </div>
+</div>
