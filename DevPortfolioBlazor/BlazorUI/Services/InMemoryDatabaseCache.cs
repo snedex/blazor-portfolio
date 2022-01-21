@@ -100,6 +100,16 @@ namespace BlazorUI.Services
             }
         }
 
+        internal async Task<Category> GetCategoryById(int id)
+        {
+            if (_categories == null)
+            {
+                await GetCategoriesAndCache();
+            }
+
+            return _categories.FirstOrDefault(category => category.CategoryId == id);
+        }
+
         //event to subscribe to, to listen for data change
         internal event Action OnCategoriesDataChanged;
         internal event Action OnSkillsDataChanged;

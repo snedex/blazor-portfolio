@@ -1,4 +1,5 @@
 ﻿using Core.Models;
+using Core.ViewModel;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using ServerAPI.Data;
@@ -88,7 +89,7 @@ namespace ServerAPI.Controllers
         }
 
         [HttpPut("{id}")]
-        public async Task<IActionResult> Update(int id, [FromBody] Category updatedCategory)
+        public async Task<IActionResult> Update(int id, [FromBody] CategoryViewModel updatedCategory)
         {
             try
             {
@@ -97,9 +98,9 @@ namespace ServerAPI.Controllers
                     return BadRequest(ModelState);
                 }
 
-                bool exists = await _appDbContext.Categories.AnyAsync(category => category.CategoryId == id);
+                var dbCategory = await _appDbContext.Categories.FirstOrDefaultAsync(category => category.CategoryId == id);
 
-                if (exists == false)
+                if (dbCategory == null)
                 {
                     return NotFound();
                 }
@@ -109,7 +110,11 @@ namespace ServerAPI.Controllers
                     return BadRequest(ModelState);
                 }
 
-                _appDbContext.Categories.Update(updatedCategory);
+                dbCategory.Name = updatedCategory.Name;
+                dbCategory.Description = updatedCategory.Description;   
+                dbCategory.ThumbnailPath = updatedCategory.ThumbnailPath;   
+
+                _appDbContext.Categories.Update(dbCategory);
 
                 bool changesPersistedToDatabase = await PersistChangesToDatabase();
 
