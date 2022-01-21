@@ -24,4 +24,10 @@
     <Folder Include="wwwroot\assets\img\project\" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Content Update="wwwroot\assets\docs\2022-Website-Resume.pdf">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+
 </Project>
