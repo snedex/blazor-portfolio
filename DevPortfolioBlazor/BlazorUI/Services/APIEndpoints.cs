@@ -17,5 +17,8 @@
         internal readonly static string s_projects = $"{ServerBaseUrl}/api/projects";
 
         internal readonly static string s_projectDetails = $"{ServerBaseUrl}/api/projects/details";
+
+        internal readonly static string s_imageUpload = $"{ServerBaseUrl}/api/UploadImage";
+
     }
 }

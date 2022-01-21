@@ -406,3 +406,4 @@ obj
 #SQLite lock and temp files
 *.db-shm
 *.db-wal
+/DevPortfolioBlazor/.vscode
