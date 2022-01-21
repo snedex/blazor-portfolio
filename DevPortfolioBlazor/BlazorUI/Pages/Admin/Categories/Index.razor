@@ -8,7 +8,7 @@
 	{
 		DBCache.OnCategoriesDataChanged += StateHasChanged;
 
-		if (InMemoryDatabaseCache.Categories == null)
+		if (DBCache.Categories == null)
 		{
 			await DBCache.GetCategoriesAndCache();
 		}
@@ -16,7 +16,7 @@
 
 	public void Dispose() => DBCache.OnCategoriesDataChanged -= StateHasChanged;
 }
-
+ 
 <main class="admin-area-main">
 
     <BlazorUI.Components.Admin.Sidebar />
