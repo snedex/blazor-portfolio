@@ -1,4 +1,7 @@
 ﻿@page "/admin/categories"
+@using System.Net
+@using BlazorUI.Components.Shared
+@using Core.Models
 
 @implements IDisposable
 @code
@@ -15,6 +18,71 @@
     }
 
     public void Dispose() => DBCache.OnCategoriesDataChanged -= StateHasChanged;
+
+	[Inject] HttpClient HttpClient { get; set; }
+	private bool _attemptingToDeleteACategory = false;
+	private bool _successfullyDeletedACategory = false;
+	private bool _unsuccessfullyTriedToDeleteACategory = false;
+	private string _reasonUnsuccessfullyTriedToDeleteACategory = null;
+
+
+	private async void DeleteCategory(Category categoryToDelete)
+	{
+        //This should be handled by EF (cascade) and the API ?
+		if (categoryToDelete.Posts != null && categoryToDelete.Posts.Count != 0)
+		{
+			string postTitlesThatMustBeDeletedFirst = string.Empty;
+
+			for (int i = 0; i < categoryToDelete.Posts.Count; i++)
+			{
+				if (i == categoryToDelete.Posts.Count - 1)
+				{
+					// Last iteration
+					postTitlesThatMustBeDeletedFirst += $"\"{categoryToDelete.Posts[i].Title}\"";
+				}
+				else if (i == categoryToDelete.Posts.Count - 2)
+				{
+					// Second last iteration
+					postTitlesThatMustBeDeletedFirst += $"\"{categoryToDelete.Posts[i].Title}\" and ";
+				}
+				else
+				{
+					// Other iterations
+					postTitlesThatMustBeDeletedFirst += $"\"{categoryToDelete.Posts[i].Title}\", ";
+				}
+			}
+
+			_reasonUnsuccessfullyTriedToDeleteACategory = $"The category still has posts in it. Please delete the posts titled {postTitlesThatMustBeDeletedFirst} first.";
+			_unsuccessfullyTriedToDeleteACategory = true;
+		}
+		else
+		{
+			_attemptingToDeleteACategory = true;
+
+			HttpResponseMessage response = await HttpClient.DeleteAsync($"{APIEndpoints.s_categories}/{categoryToDelete.CategoryId}");
+
+			if (response.StatusCode == HttpStatusCode.NoContent)
+			{
+				if (DBCache.Categories.Remove(categoryToDelete))
+				{
+					_successfullyDeletedACategory = true;
+				}
+				else
+				{
+					_reasonUnsuccessfullyTriedToDeleteACategory = "An unexpected error has occurred. Please try again and if the issue persists contact the administrator.";
+					_unsuccessfullyTriedToDeleteACategory = true;
+				}
+			}
+			else
+			{
+				_reasonUnsuccessfullyTriedToDeleteACategory = $"The API didn't return an HttpStatusCode.NoContent status code. Instead the API returned the status code {response.StatusCode} and gave the following reason for failure: {response.ReasonPhrase}.";
+				_unsuccessfullyTriedToDeleteACategory = true;
+			}
+		}
+
+		_attemptingToDeleteACategory = false;
+		StateHasChanged();
+	}
 }
 
 <main class="admin-area-main">
@@ -30,7 +98,7 @@
                 <hr />
                 <br />
 
-                @if (DBCache.Categories == null)
+                @if (DBCache.Categories == null || _attemptingToDeleteACategory)
                 {
                     <BlazorUI.Components.Shared.LoadingSpinner />
                 }
@@ -82,7 +150,7 @@
                                                     <a href="/admin/categories/update/@category.CategoryId" class="btn btn-update shadow md-f-size-1-5 mb-4">
                                                         <i class="fas fa-edit"></i> Update
                                                     </a>
-                                                    <button class="btn btn-danger shadow md-f-size-1-5">
+                                                    <button @onclick="(() => DeleteCategory(category))" class="btn btn-danger shadow md-f-size-1-5">
                                                         <i class="fas fa-trash"></i> Delete
                                                     </button>
                                                 </div>
@@ -94,7 +162,23 @@
                         </div>
                     }
                 }
+                <div class="position-fixed bottom-0 end-5 z-index-5">					
 
+					@if (_successfullyDeletedACategory == true)
+					{
+						<Toast IsError="false" ToastTitle="Successfully deleted a category."
+							ToastBody="The category has been removed from the database."
+							ParentMethodToCallOnClickBtnClose="() => _successfullyDeletedACategory = false"	/>
+					}
+
+					@if (_unsuccessfullyTriedToDeleteACategory == true)
+					{
+						<Toast IsError="true" ToastTitle="Delete failed."
+							ToastBody="@($"The reason is \"{_reasonUnsuccessfullyTriedToDeleteACategory}\" Please try again and if the issue persists contact the administrator.")"
+							ParentMethodToCallOnClickBtnClose="() => _unsuccessfullyTriedToDeleteACategory = false"	/>
+					}
+
+				</div>
             </div>
         </div>
     </div>
