@@ -9,10 +9,25 @@ namespace ServerAPI.Data
 
         public DbSet<Skill> Skills { get; set; }
 
+        public DbSet<Project> Projects { get; set; }
+
+        public DbSet<ProjectDetail> ProjectDetails { get; set; }
+
+        public DbSet<ProjectImage> ProjectImages { get; set; }
+
+
 
         public AppDbContext(DbContextOptions<AppDbContext> options) : base(options)
         {
+            
+        }
 
+        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        {
+            base.OnConfiguring(optionsBuilder);
+#if DEBUG
+            optionsBuilder.LogTo(l => System.Diagnostics.Debug.WriteLine(l));
+#endif
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -23,6 +38,75 @@ namespace ServerAPI.Data
 
             SeedSkills(modelBuilder);
 
+            SeedProjects(modelBuilder);
+
+            SeedProjectDetails(modelBuilder);
+
+            SeedProjectImages(modelBuilder);
+
+        }
+
+
+        private static void SeedProjectImages(ModelBuilder modelBuilder)
+        {
+            var images = new List<ProjectImage>()
+            {
+                new ProjectImage() { ProjectDetailId = 1, ProjectImageId = 1 , ImagePath = "assets/img/project/blazor_1.png" },
+                new ProjectImage() { ProjectDetailId = 1, ProjectImageId = 2 , ImagePath = "assets/img/project/blazor_2.png" },
+                new ProjectImage() { ProjectDetailId = 2, ProjectImageId = 3 , ImagePath = "assets/img/project/static_1.png" },
+                new ProjectImage() { ProjectDetailId = 2, ProjectImageId = 4 , ImagePath = "assets/img/project/static_2.png" },
+                new ProjectImage() { ProjectDetailId = 2, ProjectImageId = 5 , ImagePath = "assets/img/project/static_3.png" },
+            };
+
+            modelBuilder.Entity<ProjectImage>().HasData(images);
+        }
+
+        private static void SeedProjectDetails(ModelBuilder modelBuilder)
+        {
+            var projectDetails = new ProjectDetail[2];
+
+            projectDetails[0] = new ProjectDetail()
+            {
+                ProjectDetailId = 1,
+                ProjectId = 1,
+                DemoLocation = "https://blazor.sneddon.dev/",
+                SourceLocation = "https://github.com/snedex/blazor-portfolio",
+                Content = ""
+            };
+
+            projectDetails[1] = new ProjectDetail()
+            {
+                ProjectDetailId = 2,
+                ProjectId = 2,
+                DemoLocation = "https://www.sneddon.dev/",
+                SourceLocation = "https://github.com/snedex/snedex.github.io",
+                Content = ""
+            };
+
+            modelBuilder.Entity<ProjectDetail>().HasData(projectDetails);
+        }
+  
+        private static void SeedProjects(ModelBuilder modelBuilder)
+        {
+            var projectSeed = new Project[2];
+
+            projectSeed[0] = new Project()
+            {
+                ProjectId = 1,
+                Name = "Blazor Portfolio",
+                Description = "This site! This one you are viewing right now. Bit of recursion for you. This demonstrates experiments in blazor with a Web API backend with EF core.",
+                ImagePath = "assets/img/project_blazor.png"
+            };
+
+            projectSeed[1] = new Project()
+            {
+                ProjectId = 2,
+                Name = "Main sneddon.dev Site",
+                Description = "This is my main static landing site. Built to be simple and lightweight whilst also being responsive.",
+                ImagePath = "assets/img/project_main_site.png"
+            };
+
+            modelBuilder.Entity<Project>().HasData(projectSeed);
         }
 
         private static void SeedSkills(ModelBuilder modelBuilder)
