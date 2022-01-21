@@ -39,6 +39,16 @@ namespace Server.Controllers
             return Ok(post);
         }
 
+        [HttpGet("dto/{id}")]
+        public async Task<IActionResult> GetDTO(int id)
+        {
+            Post post = await GetPostByPostId(id);
+            var postDTO = _mapper.Map<PostViewModel>(post);
+
+            return Ok(postDTO);
+        }
+
+
         [HttpPost]
         public async Task<IActionResult> Create([FromBody] PostViewModel newPost)
         {
