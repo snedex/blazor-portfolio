@@ -21,8 +21,6 @@ namespace Server.Controllers
             _mapper = mapper;
         }
 
-        #region CRUD operations
-
         [HttpGet]
         public async Task<IActionResult> Get()
         {
@@ -33,7 +31,6 @@ namespace Server.Controllers
             return Ok(posts);
         }
 
-        // website.com/api/posts/2
         [HttpGet("{id}")]
         public async Task<IActionResult> Get(int id)
         {
@@ -43,11 +40,11 @@ namespace Server.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Create([FromBody] Post postToCreate)
+        public async Task<IActionResult> Create([FromBody] PostViewModel newPost)
         {
             try
             {
-                if (postToCreate == null)
+                if (newPost == null)
                 {
                     return BadRequest(ModelState);
                 }
@@ -57,46 +54,7 @@ namespace Server.Controllers
                     return BadRequest(ModelState);
                 }
 
-                if (postToCreate.Published == true)
-                {
-                    postToCreate.PublishDate = DateTime.UtcNow.ToString(Helpers.c_SysDateTimeFormat);
-                }
-
-                await _appDbContext.Posts.AddAsync(postToCreate);
-
-                bool changesPersistedToDatabase = await PersistChangesToDatabase();
-
-                if (changesPersistedToDatabase == false)
-                {
-                    return StatusCode(500, Helpers.c_HTTP500Message_Short);
-                }
-                else
-                {
-                    return Created("Create", postToCreate);
-                }
-            }
-            catch (Exception e)
-            {
-                return StatusCode(500, $"{Helpers.c_HTTP500Message_Long} {e.Message}.");
-            }
-        }
-
-        [HttpPost]
-        public async Task<IActionResult> Create([FromBody] PostViewModel postToCreateDTO)
-        {
-            try
-            {
-                if (postToCreateDTO == null)
-                {
-                    return BadRequest(ModelState);
-                }
-
-                if (ModelState.IsValid == false)
-                {
-                    return BadRequest(ModelState);
-                }
-
-                Post postToCreate = _mapper.Map<Post>(postToCreateDTO);
+                Post postToCreate = _mapper.Map<Post>(newPost);
 
                 if (postToCreate.Published == true)
                 {
@@ -124,11 +82,11 @@ namespace Server.Controllers
         }
 
         [HttpPut("{id}")]
-        public async Task<IActionResult> Update(int id, [FromBody] PostViewModel updatedPostViewModel)
+        public async Task<IActionResult> Update(int id, [FromBody] PostViewModel updatePost)
         {
             try
             {
-                if (id < 1 || updatedPostViewModel == null || id != updatedPostViewModel.PostId)
+                if (id < 1 || updatePost == null || id != updatePost.PostId)
                 {
                     return BadRequest(ModelState);
                 }
@@ -145,7 +103,7 @@ namespace Server.Controllers
                     return BadRequest(ModelState);
                 }
 
-                Post updatedPost = _mapper.Map<Post>(updatedPostViewModel);
+                Post updatedPost = _mapper.Map<Post>(updatePost);
 
                 if (updatedPost.Published == true)
                 {
@@ -234,8 +192,6 @@ namespace Server.Controllers
                 return StatusCode(500, $"{Helpers.c_HTTP500Message_Long} {e.Message}.");
             }
         }
-
-        #endregion
 
         #region Utility methods
 
