@@ -1,5 +1,6 @@
 ﻿@page "/admin/categories/create"
 @using System.Net;
+@using BlazorUI.Components.Shared
 @using BlazorUI.Services
 @using Core.Models
 @using Core.ViewModel
@@ -35,8 +36,21 @@
 						<div class="form-group mb-5">
 							<label for="thumbnailImage">Thumbnail image (jpg/jpeg or png 1920x1080)</label>
 
-							<img src="@($"{APIEndpoints.ServerBaseUrl}/{_categoryToCreate.ThumbnailPath}")" class="admin-crud-form-thumbnail-image" alt="Post thumbnail image" />
+							@if (_attemptingToUploadImage == true)
+							{
+								<LoadingSpinner />
+							}
+							else if (_attemptToUploadFailed == true)
+							{
+								<h4 class="text-danger">Failed to upload image. @_reasonImageUploadFailed</h4>
+							}
+							else
+							{
+								<img src="@($"{APIEndpoints.ServerBaseUrl}/{_categoryToCreate.ThumbnailPath}")" class="admin-crud-form-thumbnail-image" alt="Post thumbnail image" />								
+							}	
 
+							@*<img src="@($"{APIEndpoints.ServerBaseUrl}/{_categoryToCreate.ThumbnailPath}")" class="admin-crud-form-thumbnail-image" alt="Post thumbnail image" />
+*@
 							<br />
 
 							<InputFile OnChange="HandleUploadedImage" class="form-control mt-4" id="thumbnailImage" />
