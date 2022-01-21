@@ -88,7 +88,7 @@ namespace ServerAPI.Data
                     Title = postTitle,
                     Excerpt = $"This is the excerpt for post {i}. An excerpt is a little extraction from a larger piece of text. Sort of like a preview.",
                     Content = string.Empty,
-                    PublishDate = DateTime.UtcNow.ToString("yyyy-MM-dd HH:mm"),
+                    PublishDate = DateTime.UtcNow.ToString(Helpers.c_SysDateTimeFormat),
                     Published = true,
                     Author = "Will",
                     CategoryId = categoryId

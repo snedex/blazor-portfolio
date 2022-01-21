@@ -16,6 +16,8 @@ builder.Services.AddDbContext<AppDbContext>(options => options.UseSqlite(
 
 builder.Services.AddRouting(options => options.LowercaseUrls = true);
 
+builder.Services.AddAutoMapper(typeof(ViewModelMappings));
+
 builder.Services.AddControllers().AddNewtonsoftJson(options =>
 {
     options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore;

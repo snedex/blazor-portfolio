@@ -74,7 +74,7 @@ namespace ServerAPI.Controllers
 
                 if (changesPersistedToDatabase == false)
                 {
-                    return StatusCode(500, "Something went wrong on our side. Please contact the administrator.");
+                    return StatusCode(500, Helpers.c_HTTP500Message_Short);
                 }
                 else
                 {
@@ -83,7 +83,7 @@ namespace ServerAPI.Controllers
             }
             catch (Exception e)
             {
-                return StatusCode(500, $"Something went wrong on our side. Please contact the administrator. Error message: {e.Message}.");
+                return StatusCode(500, $"Helpers.c_HTTP500Message_Long {e.Message}.");
             }
         }
 
@@ -115,7 +115,7 @@ namespace ServerAPI.Controllers
 
                 if (changesPersistedToDatabase == false)
                 {
-                    return StatusCode(500, "Something went wrong on our side. Please contact the administrator.");
+                    return StatusCode(500, Helpers.c_HTTP500Message_Short);
                 }
                 else
                 {
@@ -124,7 +124,7 @@ namespace ServerAPI.Controllers
             }
             catch (Exception e)
             {
-                return StatusCode(500, $"Something went wrong on our side. Please contact the administrator. Error message: {e.Message}.");
+                return StatusCode(500, $"{Helpers.c_HTTP500Message_Long} {e.Message}.");
             }
         }
 
@@ -165,7 +165,7 @@ namespace ServerAPI.Controllers
 
                 if (changesPersistedToDatabase == false)
                 {
-                    return StatusCode(500, "Something went wrong on our side. Please contact the administrator.");
+                    return StatusCode(500, Helpers.c_HTTP500Message_Short);
                 }
                 else
                 {
@@ -174,7 +174,7 @@ namespace ServerAPI.Controllers
             }
             catch (Exception e)
             {
-                return StatusCode(500, $"Something went wrong on our side. Please contact the administrator. Error message: {e.Message}.");
+                return StatusCode(500, $"Helpers.c_HTTP500Message_Long {e.Message}.");
             }
         }
 
