@@ -18,5 +18,7 @@ namespace Core.Models
         [Required]
         [MaxLength(1024)]
         public string Description { get; set; } 
+
+        public List<Post> Posts { get; set; }
     }
 }
