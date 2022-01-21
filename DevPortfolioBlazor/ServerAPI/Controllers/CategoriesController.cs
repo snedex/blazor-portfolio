@@ -72,7 +72,7 @@ namespace ServerAPI.Controllers
 
                 bool changesPersistedToDatabase = await PersistChangesToDatabase();
 
-                if (!changesPersistedToDatabase)
+                if (changesPersistedToDatabase == false)
                 {
                     return StatusCode(500, Helpers.c_HTTP500Message_Short);
                 }
