@@ -44,8 +44,58 @@ namespace ServerAPI.Data
 
             SeedProjectImages(modelBuilder);
 
+            SeedPosts(modelBuilder);
         }
 
+        private void SeedPosts(ModelBuilder modelBuilder)
+        {
+            Post[] postsToSeed = new Post[6];
+
+            for (int i = 1; i < 7; i++)
+            {
+                string postTitle = string.Empty;
+                int categoryId = (i % 3) + 1;
+
+                switch (i)
+                {
+                    case 1:
+                        postTitle = "First post";
+                        break;
+                    case 2:
+                        postTitle = "Second post";
+                        break;
+                    case 3:
+                        postTitle = "Third post";
+                        break;
+                    case 4:
+                        postTitle = "Fourth post";
+                        break;
+                    case 5:
+                        postTitle = "Fifth post";
+                        break;
+                    case 6:
+                        postTitle = "Sixth post";
+                        break;
+                    default:
+                        break;
+                }
+
+                postsToSeed[i - 1] = new Post
+                {
+                    PostId = i,
+                    ThumbnailImagePath = "uploads/placeholder.jpg",
+                    Title = postTitle,
+                    Excerpt = $"This is the excerpt for post {i}. An excerpt is a little extraction from a larger piece of text. Sort of like a preview.",
+                    Content = string.Empty,
+                    PublishDate = DateTime.UtcNow.ToString("yyyy-MM-dd HH:mm"),
+                    Published = true,
+                    Author = "Will",
+                    CategoryId = categoryId
+                };
+            }
+
+            modelBuilder.Entity<Post>().HasData(postsToSeed);
+        }
 
         private static void SeedProjectImages(ModelBuilder modelBuilder)
         {
