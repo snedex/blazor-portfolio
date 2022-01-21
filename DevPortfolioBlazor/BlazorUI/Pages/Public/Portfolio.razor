@@ -26,35 +26,37 @@
         DBCache.OnProjectDetailsChanged -= StateHasChanged;
     }
 
-   
+
 }
 <BlazorUI.Components.Public.Shared.NavBar />
 
 <main class="container min-vh-95 py-5 bg-white-94">
-        <div class="row">
-            <div class="col">
-                <h1>Portfolio</h1>
-                <p>Here contains a list of projects that I've built to demonstrate the use of technologies with source being available in github for judgement.</p>
-                <p>Some may be based on courses (e.g. udemy) with some deviations and experimentation, like this Blazor application.</p>
-            </div>
+    <div class="row">
+        <div class="col">
+            <h1>Portfolio</h1>
+            <p>Here contains a list of projects that I've built to demonstrate the use of technologies with source being available in github for judgement.</p>
+            <p>Some may be based on courses (e.g. udemy) with some deviations and experimentation, like this Blazor application.</p>
         </div>
-        <div class="row">
-            @if (DBCache.Projects != null)
+    </div>
+    <div class="row">
+        @if (DBCache.Projects != null)
+        {
+            foreach (var project in DBCache.Projects)
             {
-                foreach (var project in DBCache.Projects)
-                {
-                    <div class="col-md-4">
-                        <BlazorUI.Components.Public.Portfolio.ProjectCard Project="project" />
-                    </div>
-                }
+                <div class="col-md-4">
+                    <BlazorUI.Components.Public.Portfolio.ProjectCard Project="project" />
+                </div>
             }
-            else
-            {
-                <h3>Hmm.. there doesn't appear to be anything here.</h3>
-                <p><small>Might want to check that API...</small></p>
-            }
-        </div>
-    </main>
+        }
+        else
+        {
+
+            <BlazorUI.Components.Shared.LoadingSpinner />
+
+
+        }
+    </div>
+</main>
 
 
 <BlazorUI.Components.Public.Shared.Footer />

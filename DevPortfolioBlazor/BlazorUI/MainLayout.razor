@@ -1,3 +1,10 @@
 ﻿@inherits LayoutComponentBase
 
-@Body
+@*<ErrorBoundary>
+    <ChildContent>*@
+        @Body
+@*    </ChildContent>
+    <ErrorContent>
+        <p class="errorUI">Nothing to see here right now. Sorry!</p>
+    </ErrorContent>
+</ErrorBoundary>*@
