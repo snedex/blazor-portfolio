@@ -1,0 +1,34 @@
+﻿@page "/admin/categories"
+
+@implements IDisposable
+@code
+{
+	[Inject] InMemoryDatabaseCache DBCache { get; set; }
+	protected override async Task OnInitializedAsync()
+	{
+		DBCache.OnCategoriesDataChanged += StateHasChanged;
+
+		if (InMemoryDatabaseCache.Categories == null)
+		{
+			await DBCache.GetCategoriesAndCache();
+		}
+	}
+
+	public void Dispose() => DBCache.OnCategoriesDataChanged -= StateHasChanged;
+}
+
+<main class="admin-area-main">
+
+    <BlazorUI.Components.Admin.Sidebar />
+
+    <div class="admin-area-content container-fluid bg-white">
+        <div class="row g-0">
+            <div class="col">
+                <h1>Categories</h1>
+                <br />
+                <hr />
+                <br />
+            </div>
+        </div>
+    </div>
+</main>
