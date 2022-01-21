@@ -14,6 +14,7 @@ namespace BlazorUI.Services
         }
 
         private IList<Category> _categories = null;
+        private IList<Post> _posts = null;
         private IList<Skill> _skills = null;
         private IList<ProjectDetail> _projectDetails = null;
         private IList<Project> _projects = null;
@@ -55,6 +56,16 @@ namespace BlazorUI.Services
             {
                 _projectDetails = value;
                 NotifyProjectDetailsChanged();
+            }
+        }
+
+        internal IList<Post> Posts
+        {
+            get { return _posts; }
+            set
+            {
+                _posts = value;
+                NotifyPostsChanged();
             }
         }
 
@@ -100,6 +111,16 @@ namespace BlazorUI.Services
             }
         }
 
+        internal async Task GetPostsAndCache()
+        {
+            if (!_fetchingRecords)
+            {
+                _fetchingRecords = true;
+                _posts = await _httpClient.GetFromJsonAsync<List<Post>>(APIEndpoints.s_posts);
+                _fetchingRecords = false;
+            }
+        }
+
         internal async Task<Category> GetCategoryById(int id)
         {
             if (_categories == null)
@@ -110,17 +131,29 @@ namespace BlazorUI.Services
             return _categories.FirstOrDefault(category => category.CategoryId == id);
         }
 
+        internal async Task<Post> GetPostById(int id)
+        {
+            if (_posts == null)
+            {
+                await GetPostsAndCache();
+            }
+
+            return _posts.FirstOrDefault(p => p.PostId == id);
+        }
+
         //event to subscribe to, to listen for data change
         internal event Action OnCategoriesDataChanged;
         internal event Action OnSkillsDataChanged;
         internal event Action OnProjectsDataChanged;
         internal event Action OnProjectDetailsChanged;
+        internal event Action OnPostsChanged;
 
         //Fires the event if there are subscribers 
         private void NotifyCategoriesDataChanged() => OnCategoriesDataChanged?.Invoke();
         private void NotifySkillsDataChanged() => OnSkillsDataChanged?.Invoke();
         private void NotifyProjectsDataChanged() => OnProjectsDataChanged?.Invoke();
         private void NotifyProjectDetailsChanged() => OnProjectDetailsChanged?.Invoke();
+        private void NotifyPostsChanged() => OnPostsChanged?.Invoke();
 
     }
 }
