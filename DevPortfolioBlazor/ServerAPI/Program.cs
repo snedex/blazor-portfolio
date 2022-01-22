@@ -57,6 +57,29 @@ if (app.Environment.IsDevelopment())
     
 }
 
+//Create the database and seed if required.
+using (var scope = app.Services.CreateScope())
+{
+    var services = scope.ServiceProvider;
+    var context = services.GetRequiredService<AppDbContext>();
+
+    if(!context.Users.Any())
+    {
+        context.Database.Migrate();
+
+        var roleManager = services.GetService<RoleManager<IdentityRole>>();
+        var userManager = services.GetService<UserManager<IdentityUser>>();
+
+        var pwdConfig = new ConfigurationBuilder()
+            .AddUserSecrets<Program>()
+            .Build();
+
+        var testUserPw = pwdConfig.GetValue<string>("SeedAdminPwd");
+
+        await IdentitySeed.SeedIdentity(roleManager, userManager, testUserPw);
+    }
+}
+
 app.UseSwagger();
 app.UseSwaggerUI(options => {
     options.SwaggerEndpoint("/swagger/v1/swagger.json", "Blazor Portfolio API");
