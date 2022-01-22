@@ -25,7 +25,6 @@ namespace Core.Models
         [MaxLength(512)]
         public string Excerpt { get; set; }
 
-        [Required]
         [MaxLength(65536)]
         public string Content { get; set; }
 
