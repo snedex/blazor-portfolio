@@ -77,7 +77,7 @@ namespace Core
 
         public static string ConvertTitleToURL(this string str) => str.Replace(' ', '-');
 
-        private static bool ContainsSpaceThreeTimesInARow(string str)
+        internal static bool ContainsSpaceThreeTimesInARow(string str)
         {
             for (int i = 2; i < str.Length; ++i)
             {

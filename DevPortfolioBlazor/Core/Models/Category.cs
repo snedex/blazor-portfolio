@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Core.Validation;
+using System.ComponentModel.DataAnnotations;
 
 namespace Core.Models
 {
@@ -13,6 +14,8 @@ namespace Core.Models
 
         [Required]
         [MaxLength(128)]
+        [NoPeriods(ErrorMessage = "The category Name field contains one or more period characters (.). Please remove all periods.")]
+        [NoThreeSpaces(ErrorMessage = "The category Name field contains three or more spaces in a row. Please remove them.")]
         public string Name { get; set; }
 
         [Required]
