@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using Core.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using ServerAPI.Data;
@@ -8,6 +9,7 @@ namespace Server.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize(Roles = "Administrator")]
     public class PostsController : ControllerBase
     {
         private readonly AppDbContext _appDbContext;
@@ -22,6 +24,7 @@ namespace Server.Controllers
         }
 
         [HttpGet]
+        [AllowAnonymous]
         public async Task<IActionResult> Get()
         {
             List<Post> posts = await _appDbContext.Posts
@@ -32,6 +35,7 @@ namespace Server.Controllers
         }
 
         [HttpGet("{id}")]
+        [AllowAnonymous]
         public async Task<IActionResult> Get(int id)
         {
             Post post = await GetPostByPostId(id);
@@ -40,6 +44,7 @@ namespace Server.Controllers
         }
 
         [HttpGet("dto/{id}")]
+        [AllowAnonymous]
         public async Task<IActionResult> GetDTO(int id)
         {
             Post post = await GetPostByPostId(id);

@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using ServerAPI.Data;
 
@@ -6,6 +7,7 @@ namespace ServerAPI.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize(Roles = "Administrator")]
     public class ProjectsController : ControllerBase
     {
         public ProjectsController(AppDbContext dbContext)
@@ -16,6 +18,7 @@ namespace ServerAPI.Controllers
         public AppDbContext _appDbContext { get; }
 
         [HttpGet]
+        [AllowAnonymous]
         public async Task<IActionResult> Get()
         {
             var projects = await _appDbContext.Projects.AsNoTracking()
@@ -28,6 +31,7 @@ namespace ServerAPI.Controllers
         }
 
         [HttpGet("Details")]
+        [AllowAnonymous]
         public async Task<IActionResult> Details()
         {
             var details = await _appDbContext.ProjectDetails.AsNoTracking()
@@ -39,6 +43,7 @@ namespace ServerAPI.Controllers
         }
 
         [HttpGet("Detail")]
+        [AllowAnonymous]
         public async Task<IActionResult> Detail(int? id)
         {
             var detail = await _appDbContext.ProjectDetails.AsNoTracking()

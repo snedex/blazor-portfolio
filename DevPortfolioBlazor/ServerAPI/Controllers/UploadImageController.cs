@@ -3,11 +3,13 @@ using Microsoft.AspNetCore.Mvc;
 using ServerAPI.Data;
 using IO = System.IO;
 using System;
+using Microsoft.AspNetCore.Authorization;
 
 namespace ServerAPI.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize(Roles = "Administrator")]
     public class UploadImageController : ControllerBase
     {
         //TODO Magic strings

@@ -28,8 +28,16 @@ namespace ServerAPI.Data
             if (await userManager.FindByEmailAsync(AdministratorUserName) != null)
                 return;
 
-            var result = await userManager.CreateAsync(new IdentityUser(AdministratorUserName), adminPassword);
+            var tempUser = new IdentityUser(AdministratorUserName);
+            tempUser.Email = AdministratorUserName;
 
+            var result = await userManager.CreateAsync(tempUser, adminPassword);
+
+            if (result.Succeeded)
+            {
+                var user = await userManager.FindByEmailAsync(AdministratorUserName);
+                result = await userManager.AddToRoleAsync(user, AdministratorRoleName);
+            }
         }
     }
 }

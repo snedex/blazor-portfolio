@@ -1,5 +1,6 @@
 ﻿using Core.Models;
 using Core.ViewModel;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using ServerAPI.Data;
@@ -8,6 +9,7 @@ namespace ServerAPI.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize(Roles = "Administrator")]
     public class CategoriesController : ControllerBase
     {
         private AppDbContext _appDbContext;
@@ -21,6 +23,7 @@ namespace ServerAPI.Controllers
         }
 
         [HttpGet] 
+        [AllowAnonymous]
         public async Task<IActionResult> Get()
         {
             var categories = await _appDbContext.Categories
@@ -31,6 +34,7 @@ namespace ServerAPI.Controllers
         }
 
         [HttpGet("withposts")]
+        [AllowAnonymous]
         public async Task<IActionResult> GetWithPosts()
         {
             var categories = await _appDbContext.Categories
@@ -41,6 +45,7 @@ namespace ServerAPI.Controllers
         }
 
         [HttpGet("{id}")]
+        [AllowAnonymous]
         public async Task<IActionResult> Get(int id)
         {
             var category = await GetCategoryByCategoryId(id, false);
@@ -49,6 +54,7 @@ namespace ServerAPI.Controllers
         }
 
         [HttpGet("withposts/{id}")]
+        [AllowAnonymous]
         public async Task<IActionResult> GetWithPosts(int id)
         {
             var category = await GetCategoryByCategoryId(id, true);
