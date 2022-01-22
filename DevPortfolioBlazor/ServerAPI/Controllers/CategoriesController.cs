@@ -23,7 +23,9 @@ namespace ServerAPI.Controllers
         [HttpGet] 
         public async Task<IActionResult> Get()
         {
-            var categories = await _appDbContext.Categories.ToListAsync();
+            var categories = await _appDbContext.Categories
+                .Include(category => category.Posts)
+                .ToListAsync();
 
             return Ok(categories);
         }

@@ -1,4 +1,4 @@
-﻿@page "/blog/{CategoryName}"
+﻿@page "/blog/{CategoryId:int}/{CategoryName}"
 @using BlazorUI.Components.Public.Blog
 @using BlazorUI.Components.Shared
 @using Core.Models
@@ -23,9 +23,9 @@
 					</ol>
 				</nav>
 
-				<h1 class="my-3">Blog posts in @_category.Name</h1>
+				<h1 class="my-3">@(_category?.Posts?.Count() ?? -1) Blog posts in @_category.Name</h1>
 
-				@if (_publishedPosts.Count < 1)
+				@if (_publishedPosts?.Count < 1)
 				{
 					<h3>No categories found.</h3>
 				}
@@ -35,7 +35,7 @@
 						@foreach (var post in _publishedPosts)
 						{
 							<div class="col-md-4">
-								<PostCard Category="_category" Post="post" />
+								<PostCard Category="_category" Post="post"  />
 							</div>
 						}
 					</div>
@@ -49,7 +49,10 @@
 
 @code 
 {
+	[Parameter] public int CategoryId { get; set; }
 	[Parameter] public string CategoryName { get; set; }
+
+
 	[Inject] InMemoryDatabaseCache DBCache { get; set; }
 
 	private Category _category = null;
@@ -62,15 +65,15 @@
 			await DBCache.GetCategoriesAndCache();
 		}
 
-		_category = DBCache.Categories.Where(c => c.Name.ToLowerInvariant() == CategoryName).FirstOrDefault();
+		_category = await DBCache.GetCategoryById(Convert.ToInt32(CategoryId));
 
-		if (_category?.Posts?.Count != 0)
+		if(_category == null || _category.Posts == null)
 		{
-			_publishedPosts = _category.Posts.Where(post => post.Published == true).ToList();
+			_publishedPosts = new List<Post>();
 		}
 		else
 		{
-			_publishedPosts = new List<Post>();
+			_publishedPosts = _category?.Posts.Where(post => post.Published).ToList();
 		}
 	}
 }
