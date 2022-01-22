@@ -22,7 +22,7 @@ namespace BlazorUI.Services
         {
             try
             {
-                var savedtoken = await localStorage.GetItemAsStringAsync(c_LocalStorageKey);
+                var savedtoken = await localStorage.GetItemAsync<string>(c_LocalStorageKey);
 
                 if(string.IsNullOrWhiteSpace(savedtoken))
                     return new AuthenticationState(new ClaimsPrincipal(new ClaimsIdentity()));
@@ -58,7 +58,7 @@ namespace BlazorUI.Services
 
         internal async Task SignIn()
         {
-            var savedtoken = await localStorage.GetItemAsStringAsync(c_LocalStorageKey);
+            var savedtoken = await localStorage.GetItemAsync<string>(c_LocalStorageKey);
             var securityToken = _tokenHandler.ReadJwtToken(savedtoken);
 
             var claims = ParseClaims(securityToken);
