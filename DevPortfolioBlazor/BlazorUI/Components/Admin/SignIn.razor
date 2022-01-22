@@ -82,6 +82,8 @@
 
             await localStorage.SetItemAsync("bearerToken", token);
 
+			await ((AppAuthenticationStateProvider)AuthStateProvider).SignIn();
+
             httpClient.DefaultRequestHeaders.Authorization =
                 new AuthenticationHeaderValue("bearer", token);
 

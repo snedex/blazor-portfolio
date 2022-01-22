@@ -4,224 +4,233 @@
 @using Core.Models
 @using Core.ViewModel
 
-<main class="admin-area-main">
-	<BlazorUI.Components.Admin.Sidebar />
+<AuthorizeView Roles="Administrator">
+    <Authorized Context="Auth">
 
-	<div class="admin-area-content container-fluid bg-white">
-		<div class="row g-0">
-			<div class="col">
+        <main class="admin-area-main">
+            <BlazorUI.Components.Admin.Sidebar />
 
-				<h1 class="mb-4">@(_createSuccessful ? "Success! Go back to all posts to see the created post." : "Create post")</h1>
+            <div class="admin-area-content container-fluid bg-white">
+                <div class="row g-0">
+                    <div class="col">
 
-				@if (_attemptingToCreate == true)
-				{
-					<h1>Creating post...</h1>
-					<LoadingSpinner />
-				}
-				else if (_createSuccessful == false && _attemptingToCreate == false)
-				{
-					<EditForm Model="_postToCreate" OnValidSubmit="CreatePost">
-						<DataAnnotationsValidator />
+                        <h1 class="mb-4">@(_createSuccessful ? "Success! Go back to all posts to see the created post." : "Create post")</h1>
 
-						@if (DBCache.Categories == null)
-						{
-							<LoadingSpinner />
-							DBCache.GetCategoriesAndCache();
-						}
-						else
-						{
-							<div class="form-group mb-5">
-								<label for="postCategory">Category</label>
-								<InputSelect @bind-Value="@_postToCreate.CategoryId" class="form-control" id="postCategory">
-									@foreach (var category in DBCache.Categories)
-									{
-										<option value="@category.CategoryId">@category.Name</option>
-									}
-								</InputSelect>
-							</div>
-						}
+                        @if (_attemptingToCreate == true)
+                        {
+                            <h1>Creating post...</h1>
+                            <LoadingSpinner />
+                        }
+                        else if (_createSuccessful == false && _attemptingToCreate == false)
+                        {
+                            <EditForm Model="_postToCreate" OnValidSubmit="CreatePost">
+                                <DataAnnotationsValidator />
 
-						<div class="form-group mb-5">
-							<label for="postTitle">Post title</label>
-							<InputText @bind-Value="_postToCreate.Title" class="form-control" id="postTitle"></InputText>
-						</div>
+                                @if (DBCache.Categories == null)
+                                {
+                                    <LoadingSpinner />
+                                    DBCache.GetCategoriesAndCache();
+                                }
+                                else
+                                {
+                                    <div class="form-group mb-5">
+                                        <label for="postCategory">Category</label>
+                                        <InputSelect @bind-Value="@_postToCreate.CategoryId" class="form-control" id="postCategory">
+                                            @foreach (var category in DBCache.Categories)
+                                            {
+                                        <option value="@category.CategoryId">@category.Name</option>
+                                            }
+                                </InputSelect>
+                            </div>
+                                }
 
-						<div class="form-group mb-5">
-							<label for="thumbnailImage">Thumbnail image (jpg/jpeg or png 1920x1080)</label>
+                                <div class="form-group mb-5">
+                                    <label for="postTitle">Post title</label>
+                                    <InputText @bind-Value="_postToCreate.Title" class="form-control" id="postTitle"></InputText>
+                                </div>
 
-							@if (_attemptingToUploadImage == true)
-							{
-								<LoadingSpinner />
-							}
-							else if (_attemptToUploadFailed == true)
-							{
-								<h4 class="text-danger">Failed to upload image. @_reasonImageUploadFailed</h4>
-							}
-							else
-							{
-								<img src="@($"{APIEndpoints.ServerBaseUrl}/{_postToCreate.ThumbnailImagePath}")" class="admin-crud-form-thumbnail-image" alt="Post thumbnail image" />
-							}
+                                <div class="form-group mb-5">
+                                    <label for="thumbnailImage">Thumbnail image (jpg/jpeg or png 1920x1080)</label>
 
-							<br />
+                                    @if (_attemptingToUploadImage == true)
+                                    {
+                                        <LoadingSpinner />
+                                    }
+                                    else if (_attemptToUploadFailed == true)
+                                    {
+                                        <h4 class="text-danger">Failed to upload image. @_reasonImageUploadFailed</h4>
+                                    }
+                                    else
+                                    {
+                                        <img src="@($"{APIEndpoints.ServerBaseUrl}/{_postToCreate.ThumbnailImagePath}")" class="admin-crud-form-thumbnail-image" alt="Post thumbnail image" />
+                                    }
 
-							<InputFile OnChange="HandleUploadedImage" class="form-control mt-4" id="thumbnailImage" />
-						</div>
+                                    <br />
 
-						<div class="form-group mb-5">
-							<label for="postExcerpt">Post excerpt</label>
-							<InputText @bind-Value="_postToCreate.Excerpt" class="form-control" id="postExcerpt"></InputText>
-						</div>
+                                    <InputFile OnChange="HandleUploadedImage" class="form-control mt-4" id="thumbnailImage" />
+                                </div>
 
-						<div class="form-group mb-5">
-							<label for="postContent">Post content</label>
-							<div @ref="_quillJSEditorDiv" class="border border-secondary p-4"></div>
-						</div>
+                                <div class="form-group mb-5">
+                                    <label for="postExcerpt">Post excerpt</label>
+                                    <InputText @bind-Value="_postToCreate.Excerpt" class="form-control" id="postExcerpt"></InputText>
+                                </div>
 
-						<div class="form-group mb-5">
-							<label for="postPublished">Post published</label>
-							<InputCheckbox @bind-Value="@_postToCreate.Published" class="form-check-input" id="postPublished" aria-describedby="postPublishedHelp" />
-							<div id="postPublishedHelp" class="form-text">
-								The value of this specifies whether this blog post is visible on the user facing site or not.
-								Publishing a blog post also updates the value of the PublishDate field.
-							</div>
-						</div>
+                                <div class="form-group mb-5">
+                                    <label for="postContent">Post content</label>
+                                    <div @ref="_quillJSEditorDiv" class="border border-secondary p-4"></div>
+                                </div>
 
-						<div class="form-group mb-5">
-							<label for="postAuthor">Post author</label>
-							<InputText @bind-Value="_postToCreate.Author" class="form-control" id="postAuthor"></InputText>
-						</div>
+                                <div class="form-group mb-5">
+                                    <label for="postPublished">Post published</label>
+                                    <InputCheckbox @bind-Value="@_postToCreate.Published" class="form-check-input" id="postPublished" aria-describedby="postPublishedHelp" />
+                                    <div id="postPublishedHelp" class="form-text">
+                                        The value of this specifies whether this blog post is visible on the user facing site or not.
+                                        Publishing a blog post also updates the value of the PublishDate field.
+                                    </div>
+                                </div>
 
-						<ValidationSummary />
+                                <div class="form-group mb-5">
+                                    <label for="postAuthor">Post author</label>
+                                    <InputText @bind-Value="_postToCreate.Author" class="form-control" id="postAuthor"></InputText>
+                                </div>
 
-						<button class="btn btn-success shadow d-block mt-5 md-f-size-1-5" type="submit">
-							<i class="far fa-save"></i> Save
-						</button>
+                                <ValidationSummary />
 
-					</EditForm>
-				}
+                                <button class="btn btn-success shadow d-block mt-5 md-f-size-1-5" type="submit">
+                                    <i class="far fa-save"></i> Save
+                                </button>
 
-				<a href="/admin/posts" class="btn btn-primary shadow mt-5 md-f-size-1-5">
-					<i class="fas fa-arrow-left"></i> Back to all posts
-				</a>
-			</div>
-		</div>
-	</div>
-</main>
+                            </EditForm>
+                        }
+
+                        <a href="/admin/posts" class="btn btn-primary shadow mt-5 md-f-size-1-5">
+                            <i class="fas fa-arrow-left"></i> Back to all posts
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </Authorized>
+    <NotAuthorized>
+        <BlazorUI.Components.Admin.SignIn />
+    </NotAuthorized>
+</AuthorizeView>
 
 @implements IDisposable
 @code
 {
-	[Inject] HttpClient HttpClient { get; set; }
-	[Inject] InMemoryDatabaseCache DBCache { get; set; }
-	[Inject] IJSRuntime JSRuntime { get; set; }
-	private ElementReference _quillJSEditorDiv;
+    [Inject] HttpClient HttpClient { get; set; }
+    [Inject] InMemoryDatabaseCache DBCache { get; set; }
+    [Inject] IJSRuntime JSRuntime { get; set; }
+    private ElementReference _quillJSEditorDiv;
 
-	private PostViewModel _postToCreate = new PostViewModel() { 
-		ThumbnailImagePath = "uploads/placeholder.jpg" 
-	};
+    private PostViewModel _postToCreate = new PostViewModel()
+        {
+            ThumbnailImagePath = "uploads/placeholder.jpg"
+        };
 
-	private bool _attemptingToCreate = false;
-	private bool _attemptToCreateFailed = false;
-	private bool _createSuccessful = false;
+    private bool _attemptingToCreate = false;
+    private bool _attemptToCreateFailed = false;
+    private bool _createSuccessful = false;
 
-	protected async override Task OnAfterRenderAsync(bool firstRender)
-	{
-		if (firstRender)
-		{
-			await JSRuntime.InvokeVoidAsync("QuillFunctions.createQuill", _quillJSEditorDiv, true);
-		}
-	}
+    protected async override Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            await JSRuntime.InvokeVoidAsync("QuillFunctions.createQuill", _quillJSEditorDiv, true);
+        }
+    }
 
-	protected override async Task OnInitializedAsync()
+    protected override async Task OnInitializedAsync()
     {
         //This event subscription causes Blazor to rerender the component as the state has changed
         DBCache.OnCategoriesDataChanged += StateHasChanged;
 
-        if(DBCache.Categories == null)
+        if (DBCache.Categories == null)
         {
             await DBCache.GetCategoriesAndCache();
-			StateHasChanged();
+            StateHasChanged();
         }
     }
 
     public void Dispose()
     {
         //Prevents memory leaks
-         DBCache.OnCategoriesDataChanged -= StateHasChanged;
+        DBCache.OnCategoriesDataChanged -= StateHasChanged;
     }
 
-	private async Task CreatePost()
-	{
-		_attemptingToCreate = true;
+    private async Task CreatePost()
+    {
+        _attemptingToCreate = true;
 
-		_postToCreate.Content = await JSRuntime.InvokeAsync<string>("QuillFunctions.getQuillContent", _quillJSEditorDiv);
+        _postToCreate.Content = await JSRuntime.InvokeAsync<string>("QuillFunctions.getQuillContent", _quillJSEditorDiv);
 
-		HttpResponseMessage response = await HttpClient.PostAsJsonAsync<PostViewModel>(APIEndpoints.s_posts, _postToCreate);
+        HttpResponseMessage response = await HttpClient.PostAsJsonAsync<PostViewModel>(APIEndpoints.s_posts, _postToCreate);
 
-		if (response.StatusCode == HttpStatusCode.Created)
-		{
-			Post addedPost = await response.Content.ReadFromJsonAsync<Post>();
-			addedPost.Category = await DBCache.GetCategoryById(addedPost.CategoryId);
-			DBCache.Posts.Add(addedPost);
+        if (response.StatusCode == HttpStatusCode.Created)
+        {
+            Post addedPost = await response.Content.ReadFromJsonAsync<Post>();
+            addedPost.Category = await DBCache.GetCategoryById(addedPost.CategoryId);
+            DBCache.Posts.Add(addedPost);
 
-			_createSuccessful = true;
-		}
-		else
-		{
-			_attemptToCreateFailed = true;
-		}
+            _createSuccessful = true;
+        }
+        else
+        {
+            _attemptToCreateFailed = true;
+        }
 
-		_attemptingToCreate = false;
-	}
+        _attemptingToCreate = false;
+    }
 
-	private bool _attemptingToUploadImage = false;
-	private bool _attemptToUploadFailed = false;
-	private string _reasonImageUploadFailed = null;
-	private async Task HandleUploadedImage(InputFileChangeEventArgs e)
-	{
-		_attemptingToUploadImage = true;
+    private bool _attemptingToUploadImage = false;
+    private bool _attemptToUploadFailed = false;
+    private string _reasonImageUploadFailed = null;
+    private async Task HandleUploadedImage(InputFileChangeEventArgs e)
+    {
+        _attemptingToUploadImage = true;
 
-		if (e.File.ContentType != "image/jpeg" && e.File.ContentType != "image/png")
-		{
-			_reasonImageUploadFailed = "Please only upload JPEG, JPG, or PNG images.";
-			_attemptToUploadFailed = true;
-		}
-		else if (e.File.Size >= 31457280) // 31457280 bytes = 30 megabytes
-		{
-			_reasonImageUploadFailed = "Please only upload images that are smaller than 30 MegaBytes (MB).";
-			_attemptToUploadFailed = true;
-		}
-		else
-		{
-			IBrowserFile uploadedImageFile = e.File;
+        if (e.File.ContentType != "image/jpeg" && e.File.ContentType != "image/png")
+        {
+            _reasonImageUploadFailed = "Please only upload JPEG, JPG, or PNG images.";
+            _attemptToUploadFailed = true;
+        }
+        else if (e.File.Size >= 31457280) // 31457280 bytes = 30 megabytes
+        {
+            _reasonImageUploadFailed = "Please only upload images that are smaller than 30 MegaBytes (MB).";
+            _attemptToUploadFailed = true;
+        }
+        else
+        {
+            IBrowserFile uploadedImageFile = e.File;
 
-			byte[] imageAsByteArray = new byte[uploadedImageFile.Size];
+            byte[] imageAsByteArray = new byte[uploadedImageFile.Size];
 
-			// Fills the contents of the image byte array.
-			await uploadedImageFile.OpenReadStream(31457280).ReadAsync(imageAsByteArray);
-			string byteString = Convert.ToBase64String(imageAsByteArray);
+            // Fills the contents of the image byte array.
+            await uploadedImageFile.OpenReadStream(31457280).ReadAsync(imageAsByteArray);
+            string byteString = Convert.ToBase64String(imageAsByteArray);
 
-			var uploadedImage = new ImageViewModel()
-			{
-				FileExtension = uploadedImageFile.Name.Substring(uploadedImageFile.Name.Length - 4),
-				Base64Content = byteString,
-				OldImagePath = string.Empty
-			};
+            var uploadedImage = new ImageViewModel()
+                {
+                    FileExtension = uploadedImageFile.Name.Substring(uploadedImageFile.Name.Length - 4),
+                    Base64Content = byteString,
+                    OldImagePath = string.Empty
+                };
 
-			HttpResponseMessage response = await HttpClient.PostAsJsonAsync<ImageViewModel>(APIEndpoints.s_imageUpload, uploadedImage);
+            HttpResponseMessage response = await HttpClient.PostAsJsonAsync<ImageViewModel>(APIEndpoints.s_imageUpload, uploadedImage);
 
-			if (response.StatusCode == HttpStatusCode.Created)
-			{
-				_postToCreate.ThumbnailImagePath = await response.Content.ReadAsStringAsync();
-			}
-			else
-			{
-				_reasonImageUploadFailed = $"Something went wrong when making a request to the server. Server response code: {response.StatusCode}. Server reason: {response.ReasonPhrase}.";
-				_attemptToUploadFailed = true;
-			}
-		}
+            if (response.StatusCode == HttpStatusCode.Created)
+            {
+                _postToCreate.ThumbnailImagePath = await response.Content.ReadAsStringAsync();
+            }
+            else
+            {
+                _reasonImageUploadFailed = $"Something went wrong when making a request to the server. Server response code: {response.StatusCode}. Server reason: {response.ReasonPhrase}.";
+                _attemptToUploadFailed = true;
+            }
+        }
 
-		_attemptingToUploadImage = false;
-		StateHasChanged();
-	}
+        _attemptingToUploadImage = false;
+        StateHasChanged();
+    }
 }
