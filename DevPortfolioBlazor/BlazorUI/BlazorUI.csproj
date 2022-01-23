@@ -24,7 +24,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="wwwroot\assets\img\project\" />
     <Folder Include="wwwroot\js\" />
   </ItemGroup>
 
